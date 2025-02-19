@@ -115,10 +115,24 @@ export function runGeneticAlgorithm(
   penalizedFoods: string[],
   generations: number = 100,
   dietSize: number = 10
-): Diet {
+): {
+  bestDiet: Diet;
+  fitnessOverGenerations: number[];
+  proteinValues: number[];
+  carbsValues: number[];
+  diversityOverGenerations: number[];
+  bubbleChartData: { x: number; y: number; r: number }[];
+} {
   let population = generateInitialPopulation(generations, dietSize);
 
   let bestDiet: Diet = { foods: [], carbs: 0, protein: 0, score: Infinity };
+
+  // Variables for generating graphs
+  const fitnessOverGenerations: number[] = [];
+  const bubbleChartData: { x: number; y: number; r: number }[] = [];
+  const proteinValues: number[] = [];
+  const carbsValues: number[] = [];
+  const diversityOverGenerations: number[] = [];
 
   for (let i = 0; i < generations; i++) {
     population.forEach((diet) =>
@@ -126,9 +140,27 @@ export function runGeneticAlgorithm(
     );
 
     const parents = selectParents(population);
+
     const topDiet = parents[0];
     if (!bestDiet || topDiet.score < bestDiet.score) {
       bestDiet = topDiet;
+    }
+
+    if (i === 0 || i === 5 || i === 10 || i === 15 || i === 20 || i === 30 || i === generations - 1) {
+      const items = population.slice(0, 100);
+      for (let j = 0; j < items.length; j++) {
+        bubbleChartData.push({ x: items[j].protein, y: items[j].carbs, r: 5 });
+      }
+    }
+
+    if (i % 25 === 0 || i === generations - 1) {
+      fitnessOverGenerations.push(topDiet.score);
+      proteinValues.push(topDiet.protein);
+      carbsValues.push(topDiet.carbs);
+
+      const uniqueFoods = new Set<string>();
+      population.forEach((diet) => diet.foods.forEach((food) => uniqueFoods.add(food.name)));
+      diversityOverGenerations.push(uniqueFoods.size);
     }
 
     const newPopulation = [...parents];
@@ -144,5 +176,12 @@ export function runGeneticAlgorithm(
 
   bestDiet.foods = bestDiet.foods.sort((a, b) => a.name.localeCompare(b.name));
 
-  return bestDiet;
+  return {
+    bestDiet,
+    fitnessOverGenerations,
+    proteinValues,
+    carbsValues,
+    diversityOverGenerations,
+    bubbleChartData,
+  };
 }
