@@ -23,14 +23,15 @@ export function evaluateFitness(
   targetCarbs: number,
   bannedFoods: string[],
   penalizedFoods: string[]
-): number {
+): void {
   let penalty = 0;
   diet.carbs = 0;
   diet.protein = 0;
 
   for (const food of diet.foods) {
     if (bannedFoods.includes(food.name) || food.allergic.some((allergen) => bannedFoods.includes(allergen))) {
-      return Infinity;
+      diet.score = Infinity;
+      return;
     }
     if (
       penalizedFoods.includes(food.name) ||
@@ -48,57 +49,43 @@ export function evaluateFitness(
 
   diet.score = proteinDiff + carbsDiff + penalty;
 
-  return diet.score;
+  return;
 }
 
-// Método elitista
 export function selectParents(population: Diet[]): Diet[] {
   return population.sort((a, b) => a.score - b.score).slice(0, population.length / 2);
 }
-
-/* Método torneio
-export function selectParents(population: Diet[], tournamentSize: number = 3): Diet[] {
-  const selectedParents: Diet[] = [];
-
-  while (selectedParents.length < population.length / 2) {
-    const tournament: Diet[] = [];
-
-    for (let i = 0; i < tournamentSize; i++) {
-      const randomIndex = Math.floor(Math.random() * population.length);
-      tournament.push(population[randomIndex]);
-    }
-
-    tournament.sort((a, b) => a.score - b.score);
-    selectedParents.push(tournament[0]);
-  }
-
-  return selectedParents;
-}
-*/
 
 export function crossover(parent1: Diet, parent2: Diet): Diet {
   const childFoods: Food[] = [];
   const usedFoodNames = new Set<string>();
 
-  for (const food of parent1.foods) {
+  const foodsParent1 = [...parent1.foods];
+  const foodsParent2 = [...parent2.foods];
+
+  const addUniqueFood = (food: Food) => {
     if (!usedFoodNames.has(food.name)) {
       childFoods.push(food);
       usedFoodNames.add(food.name);
     }
-  }
-
-  for (const food of parent2.foods) {
-    if (!usedFoodNames.has(food.name) && childFoods.length < parent1.foods.length) {
-      childFoods.push(food);
-      usedFoodNames.add(food.name);
-    }
-  }
+  };
 
   while (childFoods.length < parent1.foods.length) {
-    const randomFood = foodDatabase[Math.floor(Math.random() * foodDatabase.length)];
-    if (!usedFoodNames.has(randomFood.name)) {
-      childFoods.push(randomFood);
-      usedFoodNames.add(randomFood.name);
+    const hasUniqueFoods = foodsParent1.length > 0 || foodsParent2.length > 0;
+
+    if (hasUniqueFoods) {
+      const chooseFromParent1 = Math.random() < 0.5;
+
+      if (chooseFromParent1 && foodsParent1.length > 0) {
+        const food = foodsParent1.shift()!;
+        addUniqueFood(food);
+      } else if (foodsParent2.length > 0) {
+        const food = foodsParent2.shift()!;
+        addUniqueFood(food);
+      }
+    } else {
+      const randomFood = foodDatabase[Math.floor(Math.random() * foodDatabase.length)];
+      addUniqueFood(randomFood);
     }
   }
 
@@ -139,24 +126,23 @@ export function runGeneticAlgorithm(
     );
 
     const parents = selectParents(population);
-    if (parents.length === 0) {
-      console.warn("População extinta! Reiniciando...");
-      population = generateInitialPopulation(generations, dietSize);
-      continue;
-    }
-
     const topDiet = parents[0];
     if (!bestDiet || topDiet.score < bestDiet.score) {
       bestDiet = topDiet;
     }
 
-    population = [];
-    for (let i = 0; i < parents.length - 1; i++) {
-      const child = crossover(parents[i], parents[i + 1]);
-      const mutated = mutate(child, 0.5);
-      population.push(mutated);
+    const newPopulation = [...parents];
+    while (newPopulation.length < population.length) {
+      const parent1 = parents[Math.floor(Math.random() * parents.length)];
+      const parent2 = parents[Math.floor(Math.random() * parents.length)];
+      const child = crossover(parent1, parent2);
+      const mutatedChild = mutate(child, 0.5);
+      newPopulation.push(mutatedChild);
     }
+    population = newPopulation;
   }
+
+  bestDiet.foods = bestDiet.foods.sort((a, b) => a.name.localeCompare(b.name));
 
   return bestDiet;
 }
