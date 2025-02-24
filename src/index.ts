@@ -9,7 +9,7 @@ const penalizedFoods: string[] = ["SOJA"];
 const algorithmsBestIndividualScores: number[] = [];
 for (let i = 0; i < 4; i++) {
   algorithmsBestIndividualScores.push(
-    runGeneticAlgorithm(targetProtein, targetCarbs, allergies, penalizedFoods, 100 + i * 50 ).bestDiet.score
+    runGeneticAlgorithm(targetProtein, targetCarbs, allergies, penalizedFoods, 150 + i * 50 ).bestDiet.score
   );
 }
 
@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
   new Chart(algorithmsBestIndividualScoresChartElement, {
     type: "line",
     data: {
-      labels: algorithmsBestIndividualScores.map((_, i) => `${100 + i * 50}`),
+      labels: algorithmsBestIndividualScores.map((_, i) => `${150 + i * 50 === 350 ? 400 : 150 + i * 50}`),
       datasets: [
         {
           label: "Score of the best individual of the algorithm",
