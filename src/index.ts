@@ -6,28 +6,34 @@ const targetCarbs = 200;
 const allergies: string[] = ["LEITE"];
 const penalizedFoods: string[] = ["SOJA"];
 
+const algorithmsBestIndividualScores: number[] = [];
+for (let i = 0; i < 4; i++) {
+  algorithmsBestIndividualScores.push(
+    runGeneticAlgorithm(targetProtein, targetCarbs, allergies, penalizedFoods, 100 + i * 50 ).bestDiet.score
+  );
+}
+
 const {
   bestDiet,
   fitnessOverGenerations,
-  proteinValues,
-  carbsValues,
   diversityOverGenerations,
   bubbleChartData,
-} = runGeneticAlgorithm(targetProtein, targetCarbs, allergies, penalizedFoods, 900, 10);
+} = runGeneticAlgorithm(targetProtein, targetCarbs, allergies, penalizedFoods, 400, 400);
 console.log("Melhor dieta encontrada:", bestDiet);
+algorithmsBestIndividualScores.push(bestDiet.score);
 
 document.addEventListener("DOMContentLoaded", () => {
   const fitnessChartElement = document.getElementById("fitnessChart") as HTMLCanvasElement;
   new Chart(fitnessChartElement, {
     type: "line",
     data: {
-      labels: fitnessOverGenerations.map((_, i) => `Generation ${i * 25}`),
+      labels: fitnessOverGenerations.map((_, i) => `${i * 25}`),
       datasets: [
         {
           label: "Score of the best individual of the generation",
           data: fitnessOverGenerations,
           borderColor: "rgba(75, 192, 192, 1)",
-          fill: false,
+          fill: true,
         },
       ],
     },
@@ -56,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
     data: {
       datasets: [
         {
-          label: "Generation 0",
+          label: "First Generation",
           data: bubbleChartData.slice(0, 100),
           backgroundColor: "rgba(255, 99, 132, 0.6)",
         },
@@ -124,48 +130,11 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  const macronutrientsChartElement = document.getElementById("macronutrientsChart") as HTMLCanvasElement;
-  new Chart(macronutrientsChartElement, {
-    type: "bar",
-    data: {
-      labels: proteinValues.map((_, i) => `Generation ${i * 25}`),
-      datasets: [
-        {
-          label: "Protein",
-          data: proteinValues,
-          backgroundColor: "rgba(255, 99, 132, 0.6)",
-        },
-        {
-          label: "Carbohydrates",
-          data: carbsValues,
-          backgroundColor: "rgba(54, 162, 235, 0.6)",
-        },
-      ],
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: "Quantity (g)",
-          },
-        },
-        x: {
-          title: {
-            display: true,
-            text: "Diet",
-          },
-        },
-      },
-    },
-  });
-
   const diversityChartElement = document.getElementById("diversityChart") as HTMLCanvasElement;
   new Chart(diversityChartElement, {
     type: "line",
     data: {
-      labels: diversityOverGenerations.map((_, i) => `Generation ${i * 25}`),
+      labels: diversityOverGenerations.map((_, i) => `${i * 25}`),
       datasets: [
         {
           label: "Diversity (Single Foods)",
@@ -188,6 +157,39 @@ document.addEventListener("DOMContentLoaded", () => {
           title: {
             display: true,
             text: "Generation",
+          },
+        },
+      },
+    },
+  });
+
+  const algorithmsBestIndividualScoresChartElement = document.getElementById("algorithmsBestIndividualScoresChart") as HTMLCanvasElement;
+  new Chart(algorithmsBestIndividualScoresChartElement, {
+    type: "line",
+    data: {
+      labels: algorithmsBestIndividualScores.map((_, i) => `${100 + i * 50}`),
+      datasets: [
+        {
+          label: "Score of the best individual of the algorithm",
+          data: algorithmsBestIndividualScores,
+          borderColor: "rgba(75, 192, 192, 1)",
+          fill: true,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: "Score",
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Generation/Population Size",
           },
         },
       },

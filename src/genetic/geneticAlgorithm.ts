@@ -3,9 +3,11 @@ import { Diet } from "../models/Diet";
 import { Food } from "../models/Food";
 
 export function generateInitialPopulation(size: number, dietSize: number): Diet[] {
-  return Array.from({ length: size }, () => {
-    const foods: Food[] = [];
+  const population: Diet[] = [];
+  const usedFoodCombinations = new Set<string>();
 
+  while (population.length < size) {
+    const foods: Food[] = [];
     while (foods.length < dietSize) {
       const randomFood = foodDatabase[Math.floor(Math.random() * foodDatabase.length)];
       if (!foods.find((food) => food.name === randomFood.name)) {
@@ -13,8 +15,17 @@ export function generateInitialPopulation(size: number, dietSize: number): Diet[
       }
     }
 
-    return { foods, carbs: 0, protein: 0, score: Infinity };
-  });
+    const foodNames = foods
+      .map((food) => food.name)
+      .sort()
+      .join(",");
+    if (!usedFoodCombinations.has(foodNames)) {
+      usedFoodCombinations.add(foodNames);
+      population.push({ foods, carbs: 0, protein: 0, score: Infinity });
+    }
+  }
+
+  return population;
 }
 
 export function evaluateFitness(
@@ -113,25 +124,23 @@ export function runGeneticAlgorithm(
   targetCarbs: number,
   bannedFoods: string[],
   penalizedFoods: string[],
-  generations: number = 100,
+  generations: number = 300,
+  populationSize: number = 300,
+  mutationRate: number = 0.5,
   dietSize: number = 10
 ): {
   bestDiet: Diet;
   fitnessOverGenerations: number[];
-  proteinValues: number[];
-  carbsValues: number[];
   diversityOverGenerations: number[];
   bubbleChartData: { x: number; y: number; r: number }[];
 } {
-  let population = generateInitialPopulation(generations, dietSize);
+  let population = generateInitialPopulation(populationSize, dietSize);
 
   let bestDiet: Diet = { foods: [], carbs: 0, protein: 0, score: Infinity };
 
   // Variables for generating graphs
   const fitnessOverGenerations: number[] = [];
   const bubbleChartData: { x: number; y: number; r: number }[] = [];
-  const proteinValues: number[] = [];
-  const carbsValues: number[] = [];
   const diversityOverGenerations: number[] = [];
 
   for (let i = 0; i < generations; i++) {
@@ -155,21 +164,35 @@ export function runGeneticAlgorithm(
 
     if (i % 25 === 0 || i === generations - 1) {
       fitnessOverGenerations.push(topDiet.score);
-      proteinValues.push(topDiet.protein);
-      carbsValues.push(topDiet.carbs);
 
       const uniqueFoods = new Set<string>();
       population.forEach((diet) => diet.foods.forEach((food) => uniqueFoods.add(food.name)));
       diversityOverGenerations.push(uniqueFoods.size);
     }
 
-    const newPopulation = [...parents];
+    const newPopulation = [bestDiet];
+    const newUsedFoodCombinations = new Set<string>();
+    newUsedFoodCombinations.add(
+      bestDiet.foods
+        .map((food) => food.name)
+        .sort()
+        .join(",")
+    );
+
     while (newPopulation.length < population.length) {
       const parent1 = parents[Math.floor(Math.random() * parents.length)];
       const parent2 = parents[Math.floor(Math.random() * parents.length)];
       const child = crossover(parent1, parent2);
-      const mutatedChild = mutate(child, 0.5);
-      newPopulation.push(mutatedChild);
+      const mutatedChild = mutate(child, mutationRate);
+
+      const foodNames = mutatedChild.foods
+        .map((food) => food.name)
+        .sort()
+        .join(",");
+      if (!newUsedFoodCombinations.has(foodNames)) {
+        newUsedFoodCombinations.add(foodNames);
+        newPopulation.push(mutatedChild);
+      }
     }
     population = newPopulation;
   }
@@ -179,8 +202,6 @@ export function runGeneticAlgorithm(
   return {
     bestDiet,
     fitnessOverGenerations,
-    proteinValues,
-    carbsValues,
     diversityOverGenerations,
     bubbleChartData,
   };
