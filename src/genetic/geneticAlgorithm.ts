@@ -1,6 +1,7 @@
 import { foodDatabase } from "../data/foodDatabase";
 import { Diet } from "../models/Diet";
 import { Food } from "../models/Food";
+import { GeneticAlgorithmResult } from "../models/GeneticAlgorithmResult";
 
 export function generateInitialPopulation(size: number, dietSize: number): Diet[] {
   const population: Diet[] = [];
@@ -128,12 +129,7 @@ export function runGeneticAlgorithm(
   populationSize: number = 300,
   mutationRate: number = 0.5,
   dietSize: number = 10
-): {
-  bestDiet: Diet;
-  fitnessOverGenerations: number[];
-  diversityOverGenerations: number[];
-  bubbleChartData: { x: number; y: number; r: number }[];
-} {
+): GeneticAlgorithmResult {
   let population = generateInitialPopulation(populationSize, dietSize);
 
   let bestDiet: Diet = { foods: [], carbs: 0, protein: 0, score: Infinity };
