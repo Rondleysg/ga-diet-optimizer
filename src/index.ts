@@ -6,6 +6,7 @@ const targetCarbs = 200;
 const allergies: string[] = ["LEITE"];
 const penalizedFoods: string[] = ["SOJA"];
 const generateCharts = true;
+
 const algorithmsBestIndividualScores: number[] = [];
 
 if (generateCharts) {

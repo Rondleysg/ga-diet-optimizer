@@ -68,8 +68,7 @@ export function runExperiments(
   }
 
   console.table(results);
-  results.forEach((r) => console.log(`${r.population} & ${r.generations} & ${r.mutationRate} & ${r.averageTime} & ${r.average} & ${r.best} & ${r.worse} & ${r.standardDeviation} \\\\`));
   return results;
 }
 
-const results = runExperiments(150, 200, ["LEITE"], ["SOJA"], [150, 300, 400], [150, 300, 400], [10], [0.3, 0.5, 0.8]);
+runExperiments(150, 200, ["LEITE"], ["SOJA"], [150, 300, 400], [150, 300, 400], [10], [0.3, 0.5, 0.8]);
