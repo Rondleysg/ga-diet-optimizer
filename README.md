@@ -50,7 +50,7 @@ This repository contains the implementation of a **Genetic Algorithm (AG)** for 
   
   GA is a technique inspired by natural evolution, which uses **selection**, **crossover** and **mutation** processes to evolve a population of solutions. In our project:
 
-- 👥 **Geração Inicial | Initial Generation:** 
+- 👥 **Geração Inicial | Initial Generation:**
   
   São geradas dietas aleatórias, garantindo a unicidade dos alimentos em cada dieta e também garantindo que cada dieta tenha uma combinação de alimentos única.
   
@@ -171,20 +171,29 @@ Before running the algorithm, it is necessary to configure the objectives and pa
 ## 📊 Resultados
 
 Para avaliar a eficácia do algoritmo, realizamos diversos experimentos com diferentes configurações de parâmetros. Todos os testes foram executados em um sistema com processador AMD Ryzen 5 5600g (3.9 GHz) e 16 GB de memória RAM, rodando Linux. Devido à natureza estocástica do AG, cada configuração experimental foi executada 20 vezes, permitindo o cálculo de métricas como **média**, **melhor valor**, **pior valor** e **desvio padrão do fitness**, além do **tempo de execução médio**. Os resultados são apresentados na tabela abaixo:
-![Results](assets/tests-params.png)
+
+<div align="center">
+  <img src="assets/tests-params.png" alt="Results">
+</div>
 
 Abaixo estão outros experimentos que foram conduzidos utilizando a configuração final de **400 indivíduos, 400 gerações e 0.3 de taxa de mutação**. As execuções foram repetidas diversas vezes e os resultados são apresentados nos seguintes gráficos:
 
 - **Evolução do Fitness do Melhor Indivíduo**:
+  
     Este gráfico mostra a evolução do score do melhor indivíduo em cada geração, evidenciando uma rápida melhoria nos primeiros ciclos seguida por uma estabilização conforme o algoritmo converge para soluções ótimas.
+
     ![Evolução do melhor indivíduo da geração (fitness)](assets/graph-fitness-evolution.png)
 
 - **Gráfico de Dispersão dos Indivíduos**:
+  
     Aqui, cada ponto representa um indivíduo (dieta) plotado em função de proteínas (eixo X) e carboidratos (eixo Y) para gerações selecionadas. O gráfico ilustra como a população inicialmente dispersa converge para uma região que atende aos valores nutricionais alvo.
+
     ![Evolução dos indivíduos ao longo das gerações, em termos de proteínas e carboidratos.](assets/graph-fitness-evolution-2.png)
 
 - **Evolução da Diversidade Populacional**:
+  
     Este gráfico apresenta a quantidade de alimentos distintos (single foods) presentes na população ao longo das gerações, demonstrando que, mesmo com intensa seleção, a diversidade é mantida em patamares estáveis.
+
     ![Diversidade populacional ao longo das gerações.](assets/graph-population-diversity.png)
 
 Todos os gráficos foram gerados automaticamente pelo sistema, você também pode gerar e visualizar os gráficos no seu navegador, basta configurar a variável `generateCharts` como `true` no arquivo `src/index.ts`.
@@ -192,19 +201,29 @@ Todos os gráficos foram gerados automaticamente pelo sistema, você também pod
 ## 📊 Results
 
 To evaluate the effectiveness of the algorithm, we performed several experiments with different parameter configurations. All tests were performed on a system with an AMD Ryzen 5 5600g processor (3.9 GHz) and 16 GB of RAM, running Linux. Due to the stochastic nature of the GA, each experimental configuration was run 20 times, allowing the calculation of metrics such as **mean**, **best value**, **worst value** and **standard deviation of fitness**, in addition to the **average execution time**. The results are presented in the table below:
-![Results](assets/tests-params.png)
+
+<div align="center">
+  <img src="assets/tests-params.png" alt="Results">
+</div>
 
 Below are other experiments that were conducted using the final configuration of **400 individuals, 400 generations and 0.3 mutation rate**. The runs were repeated several times and the results are presented in the following graphs:
 
 - **Evolution of the Fitness of the Best Individual**:
-This graph shows the evolution of the score of the best individual in each generation, showing a rapid improvement in the first cycles followed by a stabilization as the algorithm converges to optimal solutions.
-![Evolution of the best individual of the generation (fitness)](assets/graph-fitness-evolution.png)
+  
+  This graph shows the evolution of the score of the best individual in each generation, showing a rapid improvement in the first cycles followed by a stabilization as the algorithm converges to optimal solutions.
+  
+  ![Evolution of the best individual of the generation (fitness)](assets/graph-fitness-evolution.png)
 
 - **Scatter Plot of Individuals**:
-Here, each point represents an individual (diet) plotted as a function of proteins (X-axis) and carbohydrates (Y-axis) for selected generations. The graph illustrates how the initially dispersed population converges to a region that meets the target nutritional values. ![Evolution of individuals over generations, in terms of proteins and carbohydrates.](assets/graph-fitness-evolution-2.png)
+  
+  Here, each point represents an individual (diet) plotted as a function of proteins (X-axis) and carbohydrates (Y-axis) for selected generations. The graph illustrates how the initially dispersed population converges to a region that meets the target nutritional values.
+  
+  ![Evolution of individuals over generations, in terms of proteins and carbohydrates.](assets/graph-fitness-evolution-2.png)
 
 - **Evolution of Population Diversity**:
-This graph shows the amount of distinct foods (single foods) present in the population over generations, demonstrating that, even with intense selection, diversity is maintained at stable levels.
-![Population diversity over generations.](assets/graph-population-diversity.png)
+  
+  This graph shows the amount of distinct foods (single foods) present in the population over generations, demonstrating that, even with intense selection, diversity is maintained at stable levels.
+  
+  ![Population diversity over generations.](assets/graph-population-diversity.png)
 
 All graphs were generated automatically by the system. You can also generate and view the graphs in your browser by setting the `generateCharts` variable to `true` in the `src/index.ts` file.
