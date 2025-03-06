@@ -94,6 +94,11 @@ This repository contains the implementation of a **Genetic Algorithm (AG)** for 
 
 ## 🛠️ Instalação | Installation
 
+### Prerequisites
+
+- [Git](https://git-scm.com/)
+- [NodeJS](https://nodejs.org/) >= 18
+
 Para rodar este projeto, siga os passos abaixo:
 \
 To run this project, follow the steps below:
