@@ -1,5 +1,16 @@
 # GA Diet Optimizer | Otimizador de Dietas com Algoritmo Genético
 
+## Sumário | Summary
+- [📌 Informação Geral do Projeto | General Project Information](#-informação-geral-do-projeto--general-project-information)
+- [🧬 Apresentação do Problema e do Algoritmo Genético | Problem Statement and Genetic Algorithm](#-apresentação-do-problema-e-do-algoritmo-genético--problem-statement-and-genetic-algorithm)
+- [🛠️ Instalação | Installation](#️-instalação--installation)
+- [🚀 Utilização | Usage](#-utilização--usage)
+    - [Configuração do Algoritmo](#configuração-do-algoritmo)
+    - [Comandos de Execução](#comandos-de-execução)
+- [📊 Resultados](#-resultados)
+
+---
+
 ## 📌 Informação Geral do Projeto | General Project Information
 
 Este repositório contém a implementação de um **Algoritmo Genético (AG)** para a otimização de dietas personalizadas, considerando restrições nutricionais e alimentares. O sistema recebe como entrada as quantidades desejadas de **proteínas** e **carboidratos**, além de **restrições** (como alimentos proibidos por alergia ou indesejados). A partir dessas informações, o algoritmo evolui uma população de soluções, retornando a melhor dieta possível.
